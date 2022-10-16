@@ -46,10 +46,12 @@ public class Solution {
             int indexFromDelete = 0;
             for (int i = 0; i < current.length; i++) {
 //                check exception at get(index + i)
-                if (way.get(index + i) == current[i]){
-                    indexFromDelete++;
-                } else {
-                    i = Integer.MAX_VALUE;
+                if (index + i < way.size()) {
+                    if (way.get(index + i) == current[i]) {
+                        indexFromDelete++;
+                    } else {
+                        i = Integer.MAX_VALUE;
+                    }
                 }
             }
             return Arrays.copyOfRange(current, indexFromDelete, current.length);

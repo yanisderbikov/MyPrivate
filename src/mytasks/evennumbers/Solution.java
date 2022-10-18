@@ -1,5 +1,7 @@
 package mytasks.evennumbers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Solution {
@@ -14,38 +16,38 @@ public class Solution {
         int count;
         int[] nums = new int[n];
 
-
         for (int i = 0; i < nums.length; i++) {
             nums[i] = Integer.parseInt(arrInput[i]);
         }
 
+        int max = find(nums, k);
 
-        for (int i = 0; i < n; i++) {
-            count = 0;
-            if (nums[i]%2 == 0){
-                count++;
-                for (int j = i; j < nums.length - i; j++) {
-                    if(nums[j]%2 == 0){
-                        count++;
-                    } else {
-                        int likeK = k;
-                        for (int l = j; l < nums.length - j; l++) {
-                            if (nums[l]%2 != 0 && likeK != 0){
-                                count++;
-                                likeK--;
-                                l++;
-                            }
-                        }
-                    }
-                }
-            }
-            beautiful = Math.max(beautiful, count);
-        }
-
-        System.out.println(beautiful);
-
-
-
+        System.out.println(max);
 
     }
+
+    static int find(int[] nums, int k){
+        Map<Integer, Integer> visitedIntegers = new HashMap<>();
+        int maxLenght = 0;
+        int skips = 0;
+        for (int right = 0, left = 0; right < nums.length; right++){
+            int copyK = k;
+            int currentInt = nums[right]%2;
+            if (right+1 != nums.length && nums[right+1]%2 != 0 && k!=skips) {
+                skips++;
+            }
+
+            maxLenght = Math.max(maxLenght, right - left + 1 );
+        }
+        return maxLenght;
+    }
+
 }
+
+
+
+
+
+
+
+

@@ -33,6 +33,7 @@ public class Solution4 {
             map3.put(current, i);
         }
 
+
 //        найдем сочетание первой и второй строки
 
 

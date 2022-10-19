@@ -3,7 +3,6 @@ package mytasks.intrestingstrings;
 import java.util.*;
 
 public class Solution {
-    static Map<Integer, char[]> map = new TreeMap<>();
     static ArrayList<String> strings = new ArrayList<>();
     public static void main(String[] args) {
 

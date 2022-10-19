@@ -32,6 +32,7 @@ public class Sol {
             }
         }
         System.out.println(max);
+
 //        long time = System.currentTimeMillis() - startTime;
 //        System.out.println("время выполнения:" + time);
     }

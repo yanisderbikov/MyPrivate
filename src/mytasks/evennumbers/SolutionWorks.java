@@ -16,7 +16,6 @@ public class SolutionWorks {
 
         int countChots = 0;  // сколько четных значений
         int firstSkips = 0;  // сколько первых элементов можно скипнуть
-        boolean firstBlock = true;
         for (int i = 0; i < nums.length; i++) {
             int currentInt = Integer.parseInt(arr[i]) % 2;
             nums[i] = currentInt;

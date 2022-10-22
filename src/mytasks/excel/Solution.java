@@ -1,116 +1,140 @@
 package mytasks.excel;
 
-import java.util.*;
-import java.util.function.IntBinaryOperator;
+import java.util.Scanner;
 
 public class Solution {
-    static Map<Integer, String> formulas = new HashMap<>();
-    static Map<Integer, Integer> results = new HashMap<>();
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
-        int n = Integer.parseInt(scanner.nextLine());
-        for (int i = 1; i <= n; i++) {
-            String[] input = scanner.nextLine().split(" ");
-            if (Integer.parseInt(input[0])==1){
-                int value = Integer.parseInt(input[1]);
-                results.put(i, value);
-            } else {
-                formulas.put(i, input[1]);
+        String[] input = scanner.nextLine().split(" ");
+        int n = Integer.parseInt(input[0]);
+        int a[] = new int[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = Integer.parseInt(input[i+1]);
+        }
+        input = scanner.nextLine().split(" ");
+        n = Integer.parseInt(input[0]);
+        int b[] = new int[n];
+        for (int i = 0; i < n; i++) {
+            b[i] = Integer.parseInt(input[i+1]);
+        }
+        input = scanner.nextLine().split(" ");
+        n = Integer.parseInt(input[0]);
+        int c[] = new int[n];
+        for (int i = 0; i < n; i++) {
+            c[i] = Integer.parseInt(input[i+1]);
+        }
+        long time = System.currentTimeMillis();
+        int result[] = merge(a,b);
+        int result2[] = merge(result, c);
+
+        int result3[] = merge(b,c);
+        int result4[] = merge(result3, a);
+
+        int result5[] = merge(a,c);
+        int result6[] = merge(result5, b);
+
+        if (result2.length<=result6.length && result2.length<=result4.length) {
+            System.out.println(result2.length);
+            for (int i = 0; i < result2.length; i++) {
+                System.out.print(result2[i]+ " ");
+            } }else
+
+        if (result4.length<=result6.length && result4.length<=result2.length) {
+            System.out.println(result4.length);
+            for (int i = 0; i < result4.length; i++) {
+                System.out.print(result4[i]+ " ");
+            } }else
+
+        if (result6.length<=result4.length && result6.length<=result2.length) {
+            System.out.println(result6.length);
+            for (int i = 0; i < result6.length; i++) {
+                System.out.print(result6[i]+ " ");
             }
         }
-        for (int i = 1; i <= n; i++) {
-            if (!results.containsKey(i)){
-                int br = parseFormula(i);
-                if (br == -1){
-                    System.out.println(br);
+    }
+    static int[] merge(int a[], int b[]) {
+        int c[] = null;
+        int c1[] = null;
+        for (int i = 0; i < a.length; i++) {
+            int index = i;
+            int counter = 0;
+            if (a[i] == b[0]) {
+                for (int j = 0; j < b.length; j++) {
+                    int currentA =a[i];
+                    if (index < a.length)
+                        currentA =a[index];
+                    int currentB = b[j];
+                    if(currentA == currentB) {
+                        index++;
+                        counter++;
+                    }else break;
+                    if (j==b.length-1) {
+                        return a;
+                    }
+                }
+                if(index == a.length) {
+                    c = new int[a.length+b.length-counter];
+                    for (int k = 0; k < c.length; k++) {
+                        if (k < a.length)
+                            c[k] = a[k];
+                        else
+                            c[k] =b[k-(a.length-counter)];
+                    }
                     break;
                 }
             }
-            System.out.println(results.get(i));
         }
-    }
-
-    // TODO: 17.10.2022 функция должна по индексу 'i' взять из formulas взять строку с формулой
-    //  произвести над ней все операции, которые сказаны в формуле
-    //  значение положить в results под индексом 'i'
-
-
-    // TODO: 17.10.2022 при умножении / делении
-    static int parseFormula(int i) {
-        Map<Integer, Double> values = new HashMap<>();
-        Map<int[], Character> operations = new TreeMap<>(Arrays::compare);
-        String formula = formulas.get(i);
-        StringBuilder builder = new StringBuilder(formula);
-        for (int j = 2; j < builder.length(); j++) {
-            Character currentChar1 = builder.charAt(j);
-
-            if (j == builder.length() - 1){
-                for (int k = 2; k < builder.length(); k++) {
-                    currentChar1 = builder.charAt(k);
-                    if (currentChar1.equals('*') || currentChar1.equals('+') || currentChar1.equals('-')){
-                        int ind1 = Integer.parseInt(builder.substring(1, k));
-                        int ind2 = Integer.parseInt(builder.substring(k + 2, builder.length()));
-                        if (currentChar1.equals('*')){
-                            double d = (double)results.get(ind1)* (double) results.get(ind2);
-                            values.put(ind1, d/2);
-                            values.put(ind2, d/2);
-                            operations.put(new int[]{ind1, ind2}, '+');
-                        } else { // есть ошибка при использовании одинаковых индексов. А может и не ошибка
-                            values.put(ind1, (double) results.get(ind1));
-                            values.put(ind2, (double) results.get(ind2));
-                            operations.put(new int[]{ind1, ind2}, currentChar1);
-                        }
-                        k += builder.length();
-                        builder.delete(0,j+1);
-                        j=1;
+        for (int i = 0; i < b.length; i++) {
+            int index = i;
+            int counter = 0;
+            if (b[i] == a[0]) {
+                for (int j = 0; j < a.length; j++) {
+                    int currentA =b[i];
+                    if (index < b.length)
+                        currentA =b[index];//
+                    int currentB = a[j];//
+                    if(currentA == currentB) {
+                        index++;
+                        counter++;
+                    }else break;
+                    if (j==b.length-1) {
+                        return a;
                     }
                 }
-            } else if (currentChar1.equals('*') || currentChar1.equals('+') || currentChar1.equals('-')) {
-
-                for (int k = j + 3; k < builder.length(); k++) {
-                    Character currentChar2 = builder.charAt(j);
-                    if (currentChar2.equals('*') || currentChar2.equals('+') || currentChar2.equals('-')) {
-//                        тут нужно взять индексы
-                        int ind1 = Integer.parseInt(builder.substring(1, j));
-                        int ind2 = Integer.parseInt(builder.substring(j + 2, k));
-
-                        if (!results.containsKey(ind1) || !results.containsKey(ind2)) {
-                            return -1;
-                        }
-
-                        if (currentChar1.equals('*')){
-                            double d = (double)results.get(ind1)* (double) results.get(ind2);
-                            values.put(ind1, d/2);
-                            values.put(ind2, d/2);
-                            operations.put(new int[]{ind1, ind2}, '+');
-                        } else { // есть ошибка при использовании одинаковых индексов. А может и не ошибка
-                            values.put(ind1, (double) results.get(ind1));
-                            values.put(ind2, (double) results.get(ind2));
-                            operations.put(new int[]{ind1, ind2}, currentChar1);
-                        }
-                        k += builder.length();
-                        builder.delete(0,j+1);
-                        j=1;
+                if(index == b.length) {
+                    c = new int[a.length+b.length-counter];
+                    for (int k = 0; k < c.length; k++) {
+                        if (k < b.length)
+                            c[k] = b[k];
+                        else
+                            c[k] =a[k-(b.length-counter)];
                     }
+                    break;
                 }
             }
         }
-        while (operations.containsValue('-')){
-            for (var pair : operations.entrySet()){
-                if (pair.getValue().equals('-')){
-                    int[] n = pair.getKey();
-                    values.replace(n[1], -values.get(n[1]));
-                }
+        if (c!=null && c1!=null) {
+            for (int i = 0; i < c.length; i++) {
+                System.out.print(c[i]);
+
             }
+            System.out.println("     ");
+            for (int i = 0; i < c1.length; i++) {
+                System.out.print(c1[i]);
+            }
+            System.out.println(" ");
+            if (c.length>c1.length) return c1; else return c;
+        } else if(c!=null) return c;
+        else if(c1!=null) return c1;
+
+        c = new int[a.length+b.length];
+        for (int i = 0; i <c.length; i++) {
+            if (i<a.length)
+                c[i] = a[i];
+            else
+                c[i] = b[i-a.length];
         }
-
-        double result = 0;
-        for (var pair : values.values()){
-            result += pair;
-        }
-
-        results.put(i, (int) result);
-
-        return 0;
+        return c;
     }
 }

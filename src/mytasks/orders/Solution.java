@@ -1,49 +1,50 @@
 package mytasks.orders;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.TreeMap;
 
 public class Solution {
-
-    static Map<int[], Integer> map = new TreeMap<>(Arrays::compare);
+    static Map<int[], Integer> coordinates = new TreeMap<>(Arrays::compare);
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        String[] input = scanner.nextLine().split(" ");
+        int     N = Integer.parseInt(input[0]),
+                M = Integer.parseInt(input[1]),
+                R = Integer.parseInt(input[2]);
 
-//        отсканить 3 переменные
-        String str = scanner.nextLine();
-        String[] argStr = str.split(" ");
-        long startTime = System.currentTimeMillis();
-        int N = Integer.parseInt(argStr[0]), M = Integer.parseInt(argStr[1]), R = Integer.parseInt(argStr[2]);
-        for (int i = 0; i < N; i++) {
-            str = scanner.nextLine();
-            argStr = str.split(" ");
-            for (int j = 0; j < M; j++) {
-//                пробегаемся по первой строке
-                int d = Integer.parseInt(argStr[j]);
-//                для этого d мы ищем все r и с, которые подойдут по условию
-                for (int r = 0; r < M - R + 1; r++) {
-                    for (int c = 0; c < N - R + 1; c++) {
-                        boolean bool = (Math.pow((i - r), 2) + Math.pow((j - c), 2) <= (double)R);
-                        if (bool){
-                            int[] arr = new int[]{r, c};
-                            if (map.containsKey(arr)){
-                                int dInner = map.get(arr);
-                                d = d + dInner;
-                                map.replace(arr, d);
-                            } else {
-                                map.put(arr, d);
-                            }
-                        }
-                    }
+        for (int i = 1; i <= N; i++) {
+            input = scanner.nextLine().split(" ");
+            for (int j = 1; j <= M; j++) {
+                int d = Integer.parseInt(input[j-1]);
+                coordinates.put(new int[]{i, j}, d);
+            }
+        }
+        int max = 0;
+        for (int r = 1; r <= N; r++) {
+            for (int c = 1; c <= M; c++) {
+                max = Math.max(max, findCountAtRC(R, r, c));
+            }
+        }
+        System.out.println(max);
+    }
+
+    static int findCountAtRC(int R, int r, int c){
+
+        int count = 0;
+        for (int i = r - R; i <= r + R; i++) {
+            if (i <= 1) i = 1;
+            for (int j = c - R; j <= c + R; j++) {
+                if (j <= 1) j = 1;
+                int[] arr = new int[]{i,j};
+                if (coordinates.containsKey(arr) &&
+                        (Math.pow((i-r),2) + Math.pow((j-c),2)) <= Math.pow(R,2)
+                ){
+                    count += coordinates.get(arr);
                 }
             }
         }
-
-        int result = map.values().stream()
-                .max(Integer::compare)
-                .orElse(0);
-        System.out.println(result);
-        long time = System.currentTimeMillis() - startTime;
-        System.out.println("время выполнения:" + time);
-
+        return count;
     }
 }

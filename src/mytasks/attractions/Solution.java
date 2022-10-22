@@ -70,7 +70,8 @@ public class Solution {
                         counter++;
                     }else break;
                     if (j==b.length-1) {
-                        return a;
+                        if (a.length>b.length) return a;
+                        else return b;
                     }
                 }
                 if(index == a.length) {
@@ -114,20 +115,14 @@ public class Solution {
                 }
             }
         }
-        if (c!=null && c1!=null) {
-            for (int i = 0; i < c.length; i++) {
-                System.out.print(c[i]);
 
-            }
-            System.out.println("     ");
-            for (int i = 0; i < c1.length; i++) {
-                System.out.print(c1[i]);
-            }
-            System.out.println(" ");
+//        блок проверки кода если выполнилось 2 for'а
+        if (c!=null && c1!=null)
             if (c.length>c1.length) return c1; else return c;
-        } else if(c!=null) return c;
+        else if(c!=null) return c;
         else if(c1!=null) return c1;
 
+//        если ничего не выполнилось, то мы сливаем 2 массива
         c = new int[a.length+b.length];
         for (int i = 0; i <c.length; i++) {
             if (i<a.length)
@@ -137,4 +132,8 @@ public class Solution {
         }
         return c;
     }
+
+
+
+
 }

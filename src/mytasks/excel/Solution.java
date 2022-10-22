@@ -2,139 +2,95 @@ package mytasks.excel;
 
 import java.util.Scanner;
 
-public class Solution {
+import java.util.*;
+import java.util.function.IntBinaryOperator;
+import java.util.Scanner;
+
+public class Solution{
+    static Map<String, Integer> results = new HashMap<>();
+    static Map<String, String> formula = new HashMap<>();
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
-        String[] input = scanner.nextLine().split(" ");
-        int n = Integer.parseInt(input[0]);
-        int a[] = new int[n];
-        for (int i = 0; i < n; i++) {
-            a[i] = Integer.parseInt(input[i+1]);
-        }
-        input = scanner.nextLine().split(" ");
-        n = Integer.parseInt(input[0]);
-        int b[] = new int[n];
-        for (int i = 0; i < n; i++) {
-            b[i] = Integer.parseInt(input[i+1]);
-        }
-        input = scanner.nextLine().split(" ");
-        n = Integer.parseInt(input[0]);
-        int c[] = new int[n];
-        for (int i = 0; i < n; i++) {
-            c[i] = Integer.parseInt(input[i+1]);
-        }
-        long time = System.currentTimeMillis();
-        int result[] = merge(a,b);
-        int result2[] = merge(result, c);
-
-        int result3[] = merge(b,c);
-        int result4[] = merge(result3, a);
-
-        int result5[] = merge(a,c);
-        int result6[] = merge(result5, b);
-
-        if (result2.length<=result6.length && result2.length<=result4.length) {
-            System.out.println(result2.length);
-            for (int i = 0; i < result2.length; i++) {
-                System.out.print(result2[i]+ " ");
-            } }else
-
-        if (result4.length<=result6.length && result4.length<=result2.length) {
-            System.out.println(result4.length);
-            for (int i = 0; i < result4.length; i++) {
-                System.out.print(result4[i]+ " ");
-            } }else
-
-        if (result6.length<=result4.length && result6.length<=result2.length) {
-            System.out.println(result6.length);
-            for (int i = 0; i < result6.length; i++) {
-                System.out.print(result6[i]+ " ");
+        int n = Integer.parseInt(scanner.nextLine());
+        for (int i = 1; i <= n; i++) {
+            String[] input = scanner.nextLine().split(" ");
+            if (Integer.parseInt(input[0])==1){
+                int value = Integer.parseInt(input[1]);
+                results.put("C"+i, value);
+            } else {
+                results.put("C"+i, null);
+                formula.put("C"+i, input[1]);
             }
         }
+        String string = print();
+        if (string.equals("-1")) System.out.println(-1); else
+            results.entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .forEach(x -> System.out.println(x.getValue().toString()));
+
     }
-    static int[] merge(int a[], int b[]) {
-        int c[] = null;
-        int c1[] = null;
-        for (int i = 0; i < a.length; i++) {
-            int index = i;
-            int counter = 0;
-            if (a[i] == b[0]) {
-                for (int j = 0; j < b.length; j++) {
-                    int currentA =a[i];
-                    if (index < a.length)
-                        currentA =a[index];
-                    int currentB = b[j];
-                    if(currentA == currentB) {
-                        index++;
-                        counter++;
-                    }else break;
-                    if (j==b.length-1) {
-                        return a;
-                    }
+    static String print() {
+        for (var pair : formula.entrySet()){
+            int sum = parseStr(formula.get(pair.getKey()));
+            if (sum == -1) return String.valueOf(-1);
+            results.replace(pair.getKey(), sum);
+        }
+        return "0";
+    }
+    static int parseStr(String str){
+        int minusMult = 0;
+        int plusMult = 0;
+        int sum = 0;
+        StringBuilder builder = new StringBuilder(str);
+        while (builder.toString().contains("*")){
+            int indexStar = builder.indexOf("*");
+            int indexSymbol1 = -1;
+            // to right
+            for (int j = indexStar + 2; j < builder.length(); j++) {
+                if (builder.toString().charAt(j) == '+' || builder.toString().charAt(j) == '-'
+                        || builder.toString().charAt(j) == '*') {
+                    indexSymbol1 = j;
+                    break;
+                } else {
+                    indexSymbol1 = builder.length();
                 }
-                if(index == a.length) {
-                    c = new int[a.length+b.length-counter];
-                    for (int k = 0; k < c.length; k++) {
-                        if (k < a.length)
-                            c[k] = a[k];
-                        else
-                            c[k] =b[k-(a.length-counter)];
+            }
+            // to left
+            for (int j = indexStar - 2; j >=0; j--) {
+                if (builder.toString().charAt(j) == '+' || builder.toString().charAt(j) == '-' || builder.toString().charAt(j) == '*' || j==0) {
+                    String val1 = builder.substring(j+1, indexStar);
+                    String val2 = builder.substring(indexStar+1, indexSymbol1);
+                    if (results.get(val1)==null || results.get(val2)==null) return -1;
+
+                    if (builder.toString().charAt(j)== '-' && indexSymbol1 != -1) {
+                        minusMult += results.get(val1) * results.get(val2);
                     }
+                    else if (builder.toString().charAt(j) == '+' && indexSymbol1 != -1) {
+                        plusMult += results.get(val1) * results.get(val2);
+                    }
+                    builder.delete(j, indexSymbol1);
                     break;
                 }
             }
         }
-        for (int i = 0; i < b.length; i++) {
-            int index = i;
-            int counter = 0;
-            if (b[i] == a[0]) {
-                for (int j = 0; j < a.length; j++) {
-                    int currentA =b[i];
-                    if (index < b.length)
-                        currentA =b[index];//
-                    int currentB = a[j];//
-                    if(currentA == currentB) {
-                        index++;
-                        counter++;
-                    }else break;
-                    if (j==b.length-1) {
-                        return a;
-                    }
+        for (int i = builder.length()-1; i >=0; i--) {
+            if (builder.toString().charAt(i) == '+' || i==0) {
+                if (i == 0 && builder.length()!=0){
+                    if (results.get(builder.toString()) == null) return -1;
+                    sum += results.get(builder.toString());
+                }else {
+                    String val1 = builder.substring(i+1);
+                    if (results.get(val1) == null) return -1;
+                    sum += results.get(val1);
+                    builder.delete(i, builder.length());
                 }
-                if(index == b.length) {
-                    c = new int[a.length+b.length-counter];
-                    for (int k = 0; k < c.length; k++) {
-                        if (k < b.length)
-                            c[k] = b[k];
-                        else
-                            c[k] =a[k-(b.length-counter)];
-                    }
-                    break;
-                }
+            } else if(builder.toString().charAt(i) == '-'){
+                String val1 = builder.substring(i+1);
+                if (results.get(val1) == null) return -1;
+                sum -= results.get(val1);
+                builder.delete(i, builder.length());
             }
         }
-        if (c!=null && c1!=null) {
-            for (int i = 0; i < c.length; i++) {
-                System.out.print(c[i]);
-
-            }
-            System.out.println("     ");
-            for (int i = 0; i < c1.length; i++) {
-                System.out.print(c1[i]);
-            }
-            System.out.println(" ");
-            if (c.length>c1.length) return c1; else return c;
-        } else if(c!=null) return c;
-        else if(c1!=null) return c1;
-
-        c = new int[a.length+b.length];
-        for (int i = 0; i <c.length; i++) {
-            if (i<a.length)
-                c[i] = a[i];
-            else
-                c[i] = b[i-a.length];
-        }
-        return c;
+        return sum+plusMult-minusMult;
     }
 }

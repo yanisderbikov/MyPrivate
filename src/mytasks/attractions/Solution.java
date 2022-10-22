@@ -53,9 +53,38 @@ public class Solution {
             }
         }
     }
-    static int[] merge(int a[], int b[]) {
-        int c[] = null;
-        int c1[] = null;
+    static int[] merge(int[] a, int[] b) {
+
+        int[] с2 = iteratingToMassive(a, b);
+        int[] c1 = iteratingToMassive(b, a);
+
+//        проверки создались ли массивы
+        if (с2!=null && c1!=null)
+            if (с2.length>c1.length) return c1; else return с2;
+        else if(с2!=null) return с2;
+        else if(c1!=null) return c1;
+
+//        если ничего не выполнилось, то мы сливаем 2 массива
+        int[] с = new int[a.length+b.length];
+        for (int i = 0; i <с.length; i++) {
+            if (i<a.length)
+                с[i] = a[i];
+            else
+                с[i] = b[i-a.length];
+        }
+        return с;
+    }
+
+    static int[] iteratingToMassive(int[] a, int[] b){
+
+//        метод возврашяет массив,
+//        если было выполнено одно из условий:
+//          1 - массив полностью содержится в другом массиве, тогда мы выводим просто больший массив
+//          2 - массив не полностью содержится в другом массиве, только частично, значит мы выводим их слияние
+//
+//        иначе null
+
+        int[] c;
         for (int i = 0; i < a.length; i++) {
             int index = i;
             int counter = 0;
@@ -69,11 +98,14 @@ public class Solution {
                         index++;
                         counter++;
                     }else break;
+//                    если один массив вошел в другой, то возвращяем больший
                     if (j==b.length-1) {
                         if (a.length>b.length) return a;
                         else return b;
                     }
                 }
+//                если массив не полностью вошел, а частично, то
+//                создается массив "с" , в котором хранится слияние 2-х массивов
                 if(index == a.length) {
                     c = new int[a.length+b.length-counter];
                     for (int k = 0; k < c.length; k++) {
@@ -82,57 +114,12 @@ public class Solution {
                         else
                             c[k] =b[k-(a.length-counter)];
                     }
-                    break;
+                    return c;
                 }
             }
         }
-        for (int i = 0; i < b.length; i++) {
-            int index = i;
-            int counter = 0;
-            if (b[i] == a[0]) {
-                for (int j = 0; j < a.length; j++) {
-                    int currentA =b[i];
-                    if (index < b.length)
-                        currentA =b[index];//
-                    int currentB = a[j];//
-                    if(currentA == currentB) {
-                        index++;
-                        counter++;
-                    }else break;
-                    if (j==b.length-1) {
-                        return a;
-                    }
-                }
-                if(index == b.length) {
-                    c = new int[a.length+b.length-counter];
-                    for (int k = 0; k < c.length; k++) {
-                        if (k < b.length)
-                            c[k] = b[k];
-                        else
-                            c[k] =a[k-(b.length-counter)];
-                    }
-                    break;
-                }
-            }
-        }
-
-//        блок проверки кода если выполнилось 2 for'а
-        if (c!=null && c1!=null)
-            if (c.length>c1.length) return c1; else return c;
-        else if(c!=null) return c;
-        else if(c1!=null) return c1;
-
-//        если ничего не выполнилось, то мы сливаем 2 массива
-        c = new int[a.length+b.length];
-        for (int i = 0; i <c.length; i++) {
-            if (i<a.length)
-                c[i] = a[i];
-            else
-                c[i] = b[i-a.length];
-        }
-        return c;
+        return null;
     }
-
 
 
 

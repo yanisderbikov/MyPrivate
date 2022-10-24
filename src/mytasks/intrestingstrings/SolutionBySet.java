@@ -49,7 +49,6 @@ public class SolutionBySet {
 
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
         writer.write(String.valueOf(sum));
-//        writer.newLine();
         writer.flush();
         writer.close();
 

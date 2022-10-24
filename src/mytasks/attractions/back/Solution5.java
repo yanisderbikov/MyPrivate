@@ -1,4 +1,4 @@
-package mytasks.attractions.trash;
+package mytasks.attractions.back;
 
 import java.util.HashMap;
 import java.util.Scanner;

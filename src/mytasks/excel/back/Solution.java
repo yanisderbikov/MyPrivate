@@ -1,7 +1,6 @@
-package mytasks.excel.trash;
+package mytasks.excel.back;
 
 import java.util.*;
-import java.util.function.IntBinaryOperator;
 
 public class Solution {
     static Map<Integer, String> formulas = new HashMap<>();

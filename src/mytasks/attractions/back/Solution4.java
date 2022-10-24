@@ -1,9 +1,9 @@
-package mytasks.attractions.trash;
+package mytasks.attractions.back;
 
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class Solution3 {
+public class Solution4 {
 
     static HashMap<Integer, Integer> map1 = new HashMap<>();
     static HashMap<Integer, Integer> map2 = new HashMap<>();
@@ -33,13 +33,9 @@ public class Solution3 {
             map3.put(current, i);
         }
 
-        for (int i = 0; i < n1; i++) {
-            if (map2.containsKey(map1.get(i))){
-                if (doesHaveNear(i) == -1){
 
-                }
-            }
-        }
+//        найдем сочетание первой и второй строки
+
 
     }
 

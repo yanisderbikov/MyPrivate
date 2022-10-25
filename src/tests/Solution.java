@@ -6,20 +6,22 @@ import java.util.concurrent.LinkedBlockingQueue;
 // "static void main" must be defined in a public class.
 public class Solution {
     public static void main(String[] args) {
-        int[] nums = { 1, 2, 3, 3, 3, 9, 9 };
+        int[] nums = { 7, 6, 3, 2, 3, 9,  };
 
         // target exists
         // returns the leftmost index
         print(nums);
         System.out.println("=== target exists ===");
-        int[] exists = {1,2,3,6,9};
-        for (int i : exists) System.out.println("index of " + i + " = " + binarySearch(nums, i));
+        int[] exists = {7,2,3,6,9};
+        for (int i : exists)
+            System.out.println("index of " + i + " = " + binarySearch(nums, i));
 
         // target does not exist
         // returns the index of where the it should be
         System.out.println("=== target does not exist: index of where it should be ===");
-        int[] notExists = {0, -100, 4, 10, 100};
-        for (int i : notExists) System.out.println("index of " + i + " = " + binarySearch(nums, i));
+        int[] notExists = {0, -100, 3, 9, 3 , 3};
+        for (int i : notExists)
+            System.out.println("index of " + i + " = " + binarySearch(nums, i));
 
         // verify target exists
         System.out.println("=== verify target exists ===");
@@ -36,7 +38,8 @@ public class Solution {
         int l = 0, r = nums.length;
         while (l < r) {
             int m = (l + r) / 2;
-            if (nums[m] < target) l = m + 1;
+            if (nums[m] < target)
+                l = m + 1;
             else r = m;
         }
         return l;

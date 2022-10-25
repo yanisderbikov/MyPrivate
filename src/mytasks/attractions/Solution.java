@@ -16,15 +16,15 @@ public class Solution {
 //        если будет неверное решение, то добавить еще вариации
         int[] var1 = theSmallest(merge(a, b, c), merge(a, c, b));
         int[] var2 = theSmallest(merge(a, b, c), merge(a, c, b));
-        int[] var3 = theSmallest(merge(c, a, b), merge(c, b, a));
+//        int[] var3 = theSmallest(merge(c, a, b), merge(c, b, a));
 
 //        print(var1);
-//        print(theSmallest(var1, var2));
+        print(theSmallest(var1, var2));
 //        print(theSmallest(theSmallest(var1, var2), var3));
 
-        printSout(var1);
-        printSout(theSmallest(var1, var2));
-        printSout(theSmallest(theSmallest(var1, var2), var3));
+//        printSout(var1);
+//        printSout(theSmallest(var1, var2));
+//        printSout(theSmallest(theSmallest(var1, var2), var3));
 
     }
 

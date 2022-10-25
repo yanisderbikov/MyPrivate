@@ -1,17 +1,19 @@
 package mytasks.evennumbers;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class SolutionWorks {
 
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String[] arrInput = scanner.nextLine().split(" ");
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String[] arrInput = reader.readLine().split(" ");
         int n = Integer.parseInt(arrInput[0]);          // k <= n
         int k = Integer.parseInt(arrInput[1]);          //
 
-        String[] arr = scanner.nextLine().split(" ");
+        String[] arr = reader.readLine().split(" ");
         int[] nums = new int[n];
 
         int countChots = 0;  // сколько четных значений
@@ -55,7 +57,6 @@ public class SolutionWorks {
                 return maxLenght;
             }
         }
-
         return maxLenght;
     }
 }

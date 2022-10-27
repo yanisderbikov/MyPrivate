@@ -1,11 +1,12 @@
 package mytasks.excel;
 
+
 import java.util.Scanner;
 
 import java.util.*;
 
 
-public class Solution{
+public class Sol{
     static Map<String, Integer> results = new HashMap<>();
     static Map<String, String> formula = new HashMap<>();
     static Map<String, String[]> strings = new HashMap<>();
@@ -22,7 +23,6 @@ public class Solution{
                 formula.put("C" + i, input[1]);
             }
         }
-
         for (var pair : formula.entrySet()) {
             String s = pair.getValue();
             String sIndex = pair.getKey();
@@ -63,39 +63,33 @@ public class Solution{
         if (yeall) {
             System.out.println(-1);
         } else {
-            removeNulls();
             printResult();
         }
     }
+    //  2
+    //  1 4
+    //  2 C1*C1-C1
 
-    static void removeNulls(){
-        while (true){
-            for (var pair : formula.entrySet()){
-                Integer sum = parseStr(formula.get(pair.getKey()));
-                if (sum != null) {
-                    results.replace(pair.getKey(), sum);
-                }
-            }
-            if (!results.containsValue(null)){
-                break;
-            }
-        }
-    }
     static void printResult(){
         for (int i = 1; i <= results.size(); i++) {
             System.out.println(results.get("C"+i));
         }
     }
 
+    static void exe(String val){
+        String str = formula.get(val);
+        parseStr(str);
+
+    }
+
     static Integer parseStr(String str){
         int minusMult = 0;
         int plusMult = 0;
         int sum = 0;
-        StringBuilder builder = new StringBuilder(str);
+        StringBuilder builder = new StringBuilder(str);/////
         while (builder.toString().contains("*")){
             int indexStar = builder.indexOf("*");
             int indexSymbol1 = -1;
-
             // to right
             for (int j = indexStar + 2; j < builder.length(); j++) {
                 if (builder.toString().charAt(j) == '+' || builder.toString().charAt(j) == '-'
@@ -112,11 +106,17 @@ public class Solution{
                     String val1 = builder.substring(j+1, indexStar);
                     String val2 = builder.substring(indexStar+1, indexSymbol1);
 
+                    if (results.get(val1) == null || results.get(val2) == null) return null;
+
                     if (builder.toString().charAt(j)== '-' && indexSymbol1 != -1) {
                         minusMult += results.get(val1) * results.get(val2);
                     }
                     else if (builder.toString().charAt(j) == '+' && indexSymbol1 != -1) {
                         plusMult += results.get(val1) * results.get(val2);
+                    } else if (j==0) {
+                        String val3 = builder.substring(j, indexStar);
+                        if (results.get(val3)==null)return null;
+                        plusMult += results.get(val3) * results.get(val2);
                     }
                     builder.delete(j, indexSymbol1);
                     break;
@@ -126,8 +126,19 @@ public class Solution{
         for (int i = builder.length()-1; i >=0; i--) {
             if (builder.toString().charAt(i) == '+' || i==0) {
                 if (i == 0 && builder.length()!=0){
-                    if (results.get(builder.toString()) == null) return null;
-                    sum += results.get(builder.toString());
+                    if (builder.charAt(i) == '+' ) {
+                        String val = builder.substring(1);
+                        if (results.get(val) == null) return null;
+                        sum += results.get(val);
+                    } else if (builder.charAt(i) == '-' ){
+                        String val = builder.substring(1);
+                        if (results.get(val) == null) return null;
+                        sum -= results.get(val);
+                    } else {
+                        String val = builder.toString();
+                        if (results.get(val) == null) return null;
+                        sum += results.get(val);
+                    }
                 }else {
                     String val1 = builder.substring(i+1);
                     if (results.get(val1) == null) return null;
@@ -141,9 +152,11 @@ public class Solution{
                 builder.delete(i, builder.length());
             }
         }
-//        if (builder.length() != 0){
-//            sum += results.get(builder.toString());
-//        }
+      /*  if (builder.length() != 0){
+            sum += results.get(builder.toString());
+        }*/
         return sum+plusMult-minusMult;
     }
 }
+
+

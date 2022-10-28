@@ -2,7 +2,7 @@ package mytasks.orders.back;
 
 import java.util.*;
 
-public class Solution {
+public class Solution2 {
 
     static Map<int[], Integer> map = new TreeMap<>(Arrays::compare);
     public static void main(String[] args) {

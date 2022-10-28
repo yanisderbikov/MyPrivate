@@ -1,9 +1,9 @@
-package mytasks.intrestingstrings;
+package mytasks.intrestingstrings.back;
 
 import java.io.*;
 import java.util.*;
 
-public class Solution {
+public class Solution10 {
     static ArrayList<String> strings = new ArrayList<>();
     public static void main(String[] args) throws IOException {
 

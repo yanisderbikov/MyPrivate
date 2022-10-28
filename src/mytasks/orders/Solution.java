@@ -1,6 +1,8 @@
 package mytasks.orders;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
@@ -21,21 +23,30 @@ public class Solution {
                 coordinates.put(new int[]{i, j}, d);
             }
         }
+
+        LocalDateTime from = LocalDateTime.now();
+
         reader.close();
         int max = 0;
         for (int r = 1; r <= N; r++) {
-            for (int c = 1; c <= M; c++) {
-                max = Math.max(max, findCountAtRC(R, r, c));
+            for (int right = M/2+1, left = M/2 ; right <= M; right+=R) {
+                max = Math.max(max, findSum(R, r, left ));
+                max = Math.max(max, findSum(R, r, right));
+                left -= R;
             }
         }
 
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
-        writer.write(String.valueOf(max));
-        writer.flush();
-        writer.close();
+//        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
+//        writer.write(String.valueOf(max));
+//        writer.flush();
+//        writer.close();
+        System.out.println(max);
+
+        LocalDateTime to = LocalDateTime.now();
+//        System.out.println(Duration.between(from, to).toMillis());
     }
 
-    static int findCountAtRC(int R, int r, int c){
+    static int findSum(int R, int r, int c){
 
         int count = 0;
         for (int i = r - R; i <= r + R; i++) {

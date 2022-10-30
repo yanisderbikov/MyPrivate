@@ -27,17 +27,21 @@ public class    Solution2{
             }
         }
 
-        if (yeall()) {
+        if (yeall()) { // вычисляется есть ли цикличномть в формулах
             System.out.println(-1);
         } else {
 //            если цикличности нет, то выполняется следующая залупа
             for (int i = 1; i <= results.size(); i++) {
                     us.put("C" + i, false);
             }
-            for(var v : strings.keySet()) {
-                if(!us.get(v)) {
-                    dfs(v);
+            try {
+                for (var v : strings.keySet()) {
+                    if (!us.get(v)) {
+                        dfs(v);
+                    }
                 }
+            } catch (Exception e){
+                System.out.println(-1);
             }
             // в обратном порядке path считать для строк
             exe();

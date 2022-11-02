@@ -1,9 +1,6 @@
 package mytasks.evennumbers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.io.*;
 
 public class SolutionC {
     public static void main(String[] args) throws IOException {
@@ -35,6 +32,11 @@ public class SolutionC {
             }
             ans = Math.max(r - l + 1, ans);
         }
-        System.out.println(Math.min(allСhet, ans));
+        String answerStr = String.valueOf(Math.min(allСhet, ans));
+
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
+        writer.write(answerStr);
+        writer.close();
+//        System.out.println(Math.min(allСhet, ans));
     }
 }

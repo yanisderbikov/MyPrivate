@@ -24,7 +24,7 @@ public class Solution {
             }
         }
 
-        LocalDateTime from = LocalDateTime.now();
+//        LocalDateTime from = LocalDateTime.now();
 
         reader.close();
         int max = 0;
@@ -36,13 +36,13 @@ public class Solution {
             }
         }
 
-//        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
-//        writer.write(String.valueOf(max));
-//        writer.flush();
-//        writer.close();
-        System.out.println(max);
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
+        writer.write(String.valueOf(max));
+        writer.flush();
+        writer.close();
+//        System.out.println(max);
 
-        LocalDateTime to = LocalDateTime.now();
+//        LocalDateTime to = LocalDateTime.now();
 //        System.out.println(Duration.between(from, to).toMillis());
     }
 

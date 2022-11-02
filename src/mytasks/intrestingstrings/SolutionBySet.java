@@ -12,13 +12,10 @@ public class SolutionBySet {
         int n = Integer.parseInt(reader.readLine());
         for (int i = 0; i < n; i++) {
             String currentLine = reader.readLine();
-            if (!strings.contains(currentLine)) {
                 strings.add(currentLine);
-            }
         }
         reader.close();
 
-        // TODO: 24.10.2022 подумать! если строки повторяются, то они не должны считаться
 
         int sum = 0;
         while (strings.size() != 1) {

@@ -7,6 +7,11 @@ import java.util.Scanner;
 import java.util.*;
 
 public class    Solution2{
+
+    static int minus = 0;
+    static int plus = 0;
+    static int sum = 0;
+
     static Map<String, Integer> results = new HashMap<>();
     static Map<String, String> formula = new HashMap<>();
     static Map<String, String[]> strings = new HashMap<>();
@@ -14,7 +19,6 @@ public class    Solution2{
     static ArrayList<String> path = new ArrayList<>();
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-//        Scanner scanner = new Scanner(System.in);
         int n = Integer.parseInt(reader.readLine());
         for (int i = 1; i <= n; i++) {
             String[] input = reader.readLine().split(" ");
@@ -34,53 +38,55 @@ public class    Solution2{
             for (int i = 1; i <= results.size(); i++) {
                     us.put("C" + i, false);
             }
-            try {
-                for (var v : strings.keySet()) {
-                    if (!us.get(v)) {
-                        dfs(v);
-                    }
+            for (var v : strings.keySet()) {
+                if (!us.get(v)) {
+                    dfs(v);
                 }
-            } catch (Exception e){
-                System.out.println(-1);
             }
+
             // в обратном порядке path считать для строк
             exe();
             printResult();
         }
     }
     static Integer parseStr(String str){
-        int minusMult = 0;
-        int plusMult = 0;
-        int sum = 0;
-        StringBuilder builder = new StringBuilder(str);/////
+        minus = 0;
+        plus = 0;
+        sum = 0;
+        StringBuilder builder = new StringBuilder(str);
         while (builder.toString().contains("*")){
-            int indexStar = builder.indexOf("*");
-            int indexSymbol1 = -1;
+            int star = builder.indexOf("*");
+            int indexRight = -1;
             // to right
-            for (int j = indexStar + 2; j < builder.length(); j++) {
+            for (int j = star + 2; j < builder.length(); j++) {
                 if (builder.toString().charAt(j) == '+' || builder.toString().charAt(j) == '-'
                         || builder.toString().charAt(j) == '*') {
-                    indexSymbol1 = j;
+                    indexRight = j;
                     break;
                 } else {
-                    indexSymbol1 = builder.length();
+                    indexRight = builder.length();    // где-то  тут ошибка.  -- напиздел
                 }
             }
             // to left
-            for (int j = indexStar - 2; j >=0; j--) {
-                if (builder.toString().charAt(j) == '+' || builder.toString().charAt(j) == '-' || builder.toString().charAt(j) == '*' || j==0) {
-                    String val1 = builder.substring(j+1, indexStar);
-                    String val2 = builder.substring(indexStar+1, indexSymbol1);
-                    if (builder.toString().charAt(j)== '-' && indexSymbol1 != -1) {
-                        minusMult += results.get(val1) * results.get(val2);
+            for (int indexLeft = star - 2; indexLeft >=0; indexLeft--) {
+                if (builder.toString().charAt(indexLeft) == '+' || builder.toString().charAt(indexLeft) == '-' || builder.toString().charAt(indexLeft) == '*' || indexLeft==0) {
+                    String val1 = builder.substring(indexLeft+1, star);
+                    String val2 = builder.substring(star+1, indexRight);
+                    if (builder.toString().charAt(indexLeft)== '-' && indexRight != -1) {
+                        minus += results.get(val1) * results.get(val2);
                     }
-                    else if (builder.toString().charAt(j) == '+' && indexSymbol1 != -1) {
-                        plusMult += results.get(val1) * results.get(val2);
-                    } else if (j==0) {
-                        String val3 = builder.substring(j, indexStar);
-                        plusMult += results.get(val3) * results.get(val2);
+                    else if (builder.toString().charAt(indexLeft) == '+' && indexRight != -1) {
+                        plus += results.get(val1) * results.get(val2);
+                    } else if (indexLeft==0) {
+                        String val3 = builder.substring(indexLeft, star);
+                        plus += results.get(val3) * results.get(val2);
                     }
-                    builder.delete(j, indexSymbol1);
+                    builder.delete(indexLeft, indexRight);
+
+                    if (builder.charAt(0) == '*'){
+                        builder = method(builder);
+                    }
+
                     break;
                 }
             }
@@ -109,7 +115,34 @@ public class    Solution2{
                 builder.delete(i, builder.length());
             }
         }
-        return sum+plusMult-minusMult;
+        return sum + plus - minus;
+    }
+
+    static StringBuilder method(StringBuilder builder){
+        int star = 0;
+        int indexRight = 0;
+        for (int j = star + 2; j < builder.length(); j++) {
+            if (builder.toString().charAt(j) == '+' || builder.toString().charAt(j) == '-'
+                    || builder.toString().charAt(j) == '*') {
+                indexRight = j;
+                break;
+            } else {
+                indexRight = builder.length();    // где-то  тут ошибка.  -- напиздел
+            }
+        }
+
+        String val = builder.substring(star+1,indexRight);
+        int toMult = results.get(val);
+        plus = plus * toMult;
+        if (builder.charAt(0) == '+'){
+            builder.delete(0, indexRight+1);
+        }else {
+            builder.delete(0, indexRight);
+        }
+        if (builder.charAt(0) == '*'){
+            builder = method(builder);
+        }
+        return builder;
     }
 
     static void dfs(String s) {

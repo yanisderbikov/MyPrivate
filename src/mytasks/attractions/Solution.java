@@ -1,6 +1,10 @@
 package mytasks.attractions;
 
 import java.io.*;
+import java.util.ArrayList;
+//import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Solution {
 
@@ -14,22 +18,26 @@ public class Solution {
         reader.close();
 
 //        если будет неверное решение, то добавить еще вариации
-        int[] var1 = theSmallest(merge(a, b, c), merge(a, c, b));
-        int[] var2 = theSmallest(merge(a, b, c), merge(a, c, b));
-//        int[] var3 = theSmallest(merge(c, a, b), merge(c, b, a));
+        ArrayList<int[]> arrayList = new ArrayList<>(){{
+            add(merge(a, c, b));
+            add(merge(a, b, c));
+            add(merge(b, c, a));
+            add(merge(b, a, c));
+            add(merge(c, a, b));
+            add(merge(c, b, a));
+        }};
 
-        print(theSmallest(var1, var2));
-//        print(var1);
-//        print(theSmallest(theSmallest(var1, var2), var3));
+        arrayList.sort(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                    return o1.length - o2.length;
+            }
+        });
 
-//        printSout(var1);
-//        printSout(theSmallest(var1, var2));
-//        printSout(theSmallest(theSmallest(var1, var2), var3));
-
+        print(arrayList.get(0));
     }
 
     static int[] parse(BufferedReader reader) throws IOException {
-
 
         String[] input = reader.readLine().split(" ");
         int n = Integer.parseInt(input[0]);
@@ -42,16 +50,7 @@ public class Solution {
     }
 
     static int[] merge(int[] a, int[] b, int[] c) {
-// TODO: 23.10.2022 подумать когда их просто склеивать после ифов или до
-        int[] ab1 = iteratingToMassive(a, b);
-        int[] ab2 = iteratingToMassive(b, a);
-
-//        в этих ифах нужно сделать аб и с и с аб, и выкинуть наименьший из них
-        int[] result1 = theSmallest(iteratingToMassive(ab1, c), iteratingToMassive(c, ab1));
-        int[] result2 = theSmallest(iteratingToMassive(ab2, c), iteratingToMassive(c, ab2));
-
-        return theSmallest(result1, result2);
-
+        return iteratingToMassive(iteratingToMassive(a, b), c);
     }
 
     static int[] iteratingToMassive(int[] a, int[] b){
@@ -66,45 +65,46 @@ public class Solution {
 
 
         if (a == null && b == null) return null;
-        else if (a == null && b != null) return b;
-        else if (a != null && b == null) return a;
+        else if (a == null) return b;
+        else if (b == null) return a;
         else {
-            {
-                for (int i = 0; i < a.length; i++) {
-                    int index = i;
-                    int counter = 0;
-                    if (a[i] == b[0]) {
-                        for (int j = 0; j < b.length; j++) {
-                            int currentA = a[i];
-                            if (index < a.length)
-                                currentA = a[index];
-                            int currentB = b[j];
-                            if (currentA == currentB) {
-                                index++;
-                                counter++;
-                            } else break;
-//                    если один массив вошел в другой, то возвращяем больший
-                            if (j == b.length - 1) {
-                                if (a.length > b.length) return a;
-                                else return b;
-                            }
+            for (int i = 0; i < a.length; i++) {
+                int index = i;
+                int counter = 0;
+                if (a[i] == b[0]) {
+                    for (int j = 0; j < b.length; j++) {
+                        int currentA = a[i];
+                        if (index < a.length)
+                            currentA = a[index];
+                        int currentB = b[j];
+                        if (currentA == currentB) {
+                            index++;
+                            counter++;
                         }
+                        else break;
+//                    если один массив вошел в другой, то возвращяем больший
+                        if (j == b.length - 1) {
+                            if (a.length > b.length) return a;
+                            else return b;
+                        }
+                    }
 //                если массив не полностью вошел, а частично, то
 //                создается массив "с" , в котором хранится слияние 2-х массивов
-                        if (index == a.length) {
-                            int[] c = new int[a.length + b.length - counter];
-                            for (int k = 0; k < c.length; k++) {
-                                if (k < a.length)
-                                    c[k] = a[k];
-                                else
-                                    c[k] = b[k - (a.length - counter)];
-                            }
-                            return c;
+                    if (index == a.length) {
+                        int[] c = new int[a.length + b.length - counter];
+                        for (int k = 0; k < c.length; k++) {
+                            if (k < a.length)
+                                c[k] = a[k];
+                            else
+                                c[k] = b[k - (a.length - counter)];
                         }
+                        return c;
                     }
                 }
             }
         }
+
+
 //        если ничего не создалось, то нужно выполнить слияние
         int[] together = new int[a.length+ b.length];
         for (int i = 0; i < together.length; i++) {
@@ -116,27 +116,15 @@ public class Solution {
         return together;
     }
 
-    static int[] theSmallest(int[] a, int[] b){
-        if (a != null && b != null) {
-            if (a.length < b.length)
-                return a;
-            else
-                return b;
-        }else if (a != null) return a;
-        else return b;
-
-    }
-
     static void print(int[] a) throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
 
         writer.write(String.valueOf(a.length));
         writer.write("\n");
-        for (int i = 0; i < a.length ; i++) {
-            writer.write(a[i] + " ");
+        for (int j : a) {
+            writer.write(j + " ");
         }
         writer.flush();
         writer.close();
     }
-
 }

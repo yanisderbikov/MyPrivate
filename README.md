@@ -49,5 +49,5 @@ Solution solution = new Solution();
 ## задача B
 
 
-
+![задача №1](/Users/yanderbikovmail.ru/Documents/ProjectsIDE/Yandex_DontShare/Yandex/picturesTasks/1.pdf)
 [write me at telegram](https://t.me/yanderbikov)

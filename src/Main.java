@@ -1,4 +1,4 @@
-package mytasks.attractions;
+package Yandex.fast_intern.attractions;
 
 import java.util.Scanner;
 

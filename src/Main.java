@@ -1,4 +1,4 @@
-package Yandex.fast_intern.attractions;
+package Yandex.fast_intern_autumn.attractions;
 
 import java.util.Scanner;
 
